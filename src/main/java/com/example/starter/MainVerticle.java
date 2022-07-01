@@ -21,15 +21,6 @@ public class MainVerticle extends AbstractVerticle {
       response.end("Hello World from Vert.x-Web!");
     });
 
-    server.listen(8000);
-
-    // Using server alone
-    // server.requestHandler(request -> {
-    //   HttpServerResponse response = request.response();
-    //   response.putHeader("content-type", "text/plain");
-    //   response.end("heloo");
-    // });
-
-    // server.listen(8000);
+    server.listen(8000);   
   }
 }
