@@ -13,13 +13,23 @@ public class MainVerticle extends AbstractVerticle {
     // Blend of using server and router.
     HttpServer server = vertx.createHttpServer();
 
-    // Using server alone
-    server.requestHandler(request -> {
-      HttpServerResponse response = request.response();
+    Router router = Router.router(vertx);
+
+    router.route().handler(ctx -> {
+      HttpServerResponse response = ctx.response();
       response.putHeader("content-type", "text/plain");
-      response.end("heloo");
+      response.end("Hello World from Vert.x-Web!");
     });
 
     server.listen(8000);
+
+    // Using server alone
+    // server.requestHandler(request -> {
+    //   HttpServerResponse response = request.response();
+    //   response.putHeader("content-type", "text/plain");
+    //   response.end("heloo");
+    // });
+
+    // server.listen(8000);
   }
 }
