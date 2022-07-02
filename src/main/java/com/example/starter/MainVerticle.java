@@ -4,6 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 
 public class MainVerticle extends AbstractVerticle {
@@ -14,13 +15,28 @@ public class MainVerticle extends AbstractVerticle {
     HttpServer server = vertx.createHttpServer();
 
     Router router = Router.router(vertx);
+    Route route = router.route("/some/path");
 
-    router.route().handler(ctx -> {
+    route.handler(ctx -> {
       HttpServerResponse response = ctx.response();
-      response.putHeader("content-type", "text/plain");
-      response.end("Hello World from Vert.x-Web!");
+      response.setChunked(true);
+      response.write("route1\n");
+      ctx.vertx().setTimer(5000, tid -> ctx.next());
     });
 
-    server.listen(8000);   
+    route.handler(ctx -> {
+      HttpServerResponse response = ctx.response();
+      response.write("route2\n");
+      ctx.vertx().setTimer(5000, tid -> ctx.next());
+    });
+
+    route.handler(ctx -> {
+      HttpServerResponse response = ctx.response();
+      response.write("route3\n");
+      ctx.response().end();
+    });
+
+    server.requestHandler(router).listen(8000);
+   
   }
 }
